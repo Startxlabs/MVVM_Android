@@ -1,16 +1,14 @@
 package com.startxlabs.mvvm.Repository.Dao;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.OnConflictStrategy;
-import android.arch.persistence.room.Query;
-
 import com.startxlabs.mvvm.Model.Project;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import androidx.lifecycle.LiveData;
+import androidx.room.Dao;
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
+import androidx.room.Query;
 
 @Dao
 public interface ProjectDao {

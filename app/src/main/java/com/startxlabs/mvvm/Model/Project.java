@@ -1,13 +1,7 @@
 package com.startxlabs.mvvm.Model;
 
-import android.arch.persistence.room.Embedded;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
-import android.arch.persistence.room.TypeConverter;
-import android.arch.persistence.room.TypeConverters;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -15,128 +9,118 @@ import com.startxlabs.mvvm.Repository.Converters.DateConverter;
 
 import java.util.Date;
 
+import androidx.annotation.NonNull;
+import androidx.room.Embedded;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
+
 @Entity(tableName = "Project")
 public class Project implements Parcelable {
 
+    public static final Creator<Project> CREATOR = new Creator<Project>() {
+        @Override
+        public Project createFromParcel(Parcel in) {
+            return new Project(in);
+        }
+
+        @Override
+        public Project[] newArray(int size) {
+            return new Project[size];
+        }
+    };
     @SerializedName("id")
     @Expose(serialize = false, deserialize = true)
     @PrimaryKey
     @NonNull
     private long pid;
-
     @SerializedName("name")
     @Expose(serialize = false, deserialize = true)
     private String pname;
-
     @SerializedName("full_name")
     @Expose(serialize = false, deserialize = true)
     private String fullName;
-
     @SerializedName("owner")
     @Expose(serialize = false, deserialize = true)
     @Embedded
     private User owner;
-
     @SerializedName("html_url")
     @Expose(serialize = false, deserialize = true)
     private String pHtmlUrl;
-
     @SerializedName("description")
     @Expose(serialize = false, deserialize = true)
     private String description;
-
     @SerializedName("url")
     @Expose(serialize = false, deserialize = true)
     private String pUrl;
-
     @SerializedName("created_at")
     @Expose(serialize = false, deserialize = true)
     @TypeConverters(DateConverter.class)
     private Date pCreatedAt;
-
     @SerializedName("updated_at")
     @Expose(serialize = false, deserialize = true)
     @TypeConverters(DateConverter.class)
     private Date updatedAt;
-
     @SerializedName("pushed_at")
     @Expose(serialize = false, deserialize = true)
     @TypeConverters(DateConverter.class)
     private Date pushedAt;
-
     @SerializedName("git_url")
     @Expose(serialize = false, deserialize = true)
     private String gitUrl;
-
     @SerializedName("ssh_url")
     @Expose(serialize = false, deserialize = true)
     private String sshUrl;
-
     @SerializedName("clone_url")
     @Expose(serialize = false, deserialize = true)
     private String cloneUrl;
-
     @SerializedName("svn_url")
     @Expose(serialize = false, deserialize = true)
     private String svnUrl;
-
     @SerializedName("homepage")
     @Expose(serialize = false, deserialize = true)
     private String homepage;
-
     @SerializedName("stargazers_count")
     @Expose(serialize = false, deserialize = true)
     private int stargazersCount;
-
     @SerializedName("watchers_count")
     @Expose(serialize = false, deserialize = true)
     private int watchersCount;
-
     @SerializedName("language")
     @Expose(serialize = false, deserialize = true)
     private String language;
-
     @SerializedName("has_issues")
     @Expose(serialize = false, deserialize = true)
     private boolean hasIssues;
-
     @SerializedName("has_downloads")
     @Expose(serialize = false, deserialize = true)
     private boolean hasDownloads;
-
     @SerializedName("has_wiki")
     @Expose(serialize = false, deserialize = true)
     private boolean hasWiki;
-
     @SerializedName("has_pages")
     @Expose(serialize = false, deserialize = true)
     private boolean hasPages;
-
     @SerializedName("forks_count")
     @Expose(serialize = false, deserialize = true)
     private int forksCount;
-
     @SerializedName("open_issues_count")
     @Expose(serialize = false, deserialize = true)
     private int openIssuesCount;
-
     @SerializedName("forks")
     @Expose(serialize = false, deserialize = true)
     private int forks;
-
     @SerializedName("open_issues")
     @Expose(serialize = false, deserialize = true)
     private int openIssues;
-
     @SerializedName("watchers")
     @Expose(serialize = false, deserialize = true)
     private int watchers;
-
     @SerializedName("default_branch")
     @Expose(serialize = false, deserialize = true)
     private String defaultBranch;
 
-    public Project(){
+    public Project() {
 
     }
 
@@ -201,18 +185,6 @@ public class Project implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<Project> CREATOR = new Creator<Project>() {
-        @Override
-        public Project createFromParcel(Parcel in) {
-            return new Project(in);
-        }
-
-        @Override
-        public Project[] newArray(int size) {
-            return new Project[size];
-        }
-    };
 
     @NonNull
     public long getPid() {

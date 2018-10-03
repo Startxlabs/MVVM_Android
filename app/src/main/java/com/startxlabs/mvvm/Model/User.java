@@ -1,11 +1,7 @@
 package com.startxlabs.mvvm.Model;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
-import android.arch.persistence.room.TypeConverters;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -13,111 +9,100 @@ import com.startxlabs.mvvm.Repository.Converters.DateConverter;
 
 import java.util.Date;
 
+import androidx.room.TypeConverters;
+
 public class User implements Parcelable {
 
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
     @SerializedName("id")
     @Expose(serialize = false, deserialize = true)
     private long id;
-
     @SerializedName("avatar_url")
     @Expose(serialize = false, deserialize = true)
     private String avatarUrl;
-
     @SerializedName("gravatar_id")
     @Expose(serialize = false, deserialize = true)
     private String gravatarId;
-
     @SerializedName("url")
     @Expose(serialize = false, deserialize = true)
     private String url;
-
     @SerializedName("html_url")
     @Expose(serialize = false, deserialize = true)
     private String htmlUrl;
-
     @SerializedName("followers_url")
     @Expose(serialize = false, deserialize = true)
     private String followersUrl;
-
     @SerializedName("following_url")
     @Expose(serialize = false, deserialize = true)
     private String followingUrl;
-
     @SerializedName("gists_url")
     @Expose(serialize = false, deserialize = true)
     private String gistsUrl;
-
     @SerializedName("starred_url")
     @Expose(serialize = false, deserialize = true)
     private String starredUrl;
-
     @SerializedName("subscriptions_url")
     @Expose(serialize = false, deserialize = true)
     private String subscriptionsUrl;
-
     @SerializedName("organizations_url")
     @Expose(serialize = false, deserialize = true)
     private String organizationsUrl;
-
     @SerializedName("repos_url")
     @Expose(serialize = false, deserialize = true)
     private String reposUrl;
-
     @SerializedName("eventsUrl")
     @Expose(serialize = false, deserialize = true)
     private String events_url;
-
     @SerializedName("received_events_url")
     @Expose(serialize = false, deserialize = true)
     private String receivedEventsUrl;
-
     @SerializedName("type")
     @Expose(serialize = false, deserialize = true)
     private String type;
-
     @SerializedName("name")
     @Expose(serialize = false, deserialize = true)
     private String name;
-
     @SerializedName("blog")
     @Expose(serialize = false, deserialize = true)
     private String blog;
-
     @SerializedName("location")
     @Expose(serialize = false, deserialize = true)
     private String location;
-
     @SerializedName("email")
     @Expose(serialize = false, deserialize = true)
     private String email;
-
     @SerializedName("public_repos")
     @Expose(serialize = false, deserialize = true)
     private int publicRepos;
-
     @SerializedName("public_gists")
     @Expose(serialize = false, deserialize = true)
     private int publicGists;
-
     @SerializedName("followers")
     @Expose(serialize = false, deserialize = true)
     private int followers;
-
     @SerializedName("following")
     @Expose(serialize = false, deserialize = true)
     private int following;
-
     @SerializedName("created_at")
     @Expose(serialize = false, deserialize = true)
     @TypeConverters(DateConverter.class)
     private Date createdAt;
-
     @SerializedName("updatedAt")
     @Expose(serialize = false, deserialize = true)
     @TypeConverters(DateConverter.class)
     private Date updated_at;
 
-    public User(){
+    public User() {
 
     }
 
@@ -146,18 +131,6 @@ public class User implements Parcelable {
         followers = in.readInt();
         following = in.readInt();
     }
-
-    public static final Creator<User> CREATOR = new Creator<User>() {
-        @Override
-        public User createFromParcel(Parcel in) {
-            return new User(in);
-        }
-
-        @Override
-        public User[] newArray(int size) {
-            return new User[size];
-        }
-    };
 
     public long getId() {
         return id;

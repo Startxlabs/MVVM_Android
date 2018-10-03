@@ -1,28 +1,18 @@
 package com.startxlabs.mvvm.Repository;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
-
 import com.startxlabs.mvvm.Model.Project;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
-import io.reactivex.Completable;
-import io.reactivex.CompletableObserver;
-import io.reactivex.android.schedulers.AndroidSchedulers;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class CustomRepository {
 
     private static CustomRepository mCustomProjectRepository;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private MutableLiveData<List<Project>> data = new MutableLiveData<>();
 
     public synchronized static CustomRepository getInstance() {
 
@@ -34,18 +24,25 @@ public class CustomRepository {
     }
 
 
-    public LiveData<List<Project>> getProjectList(String userId) {
+    public LiveData<List<Project>> getProjectList(ApiClient apiClient, final AppDatabase appDatabase, String repoName) {
 
-        final MutableLiveData<List<Project>> data = new MutableLiveData<>();
-
+        LiveData<List<Project>> temp = appDatabase.projectDao().getAll();
+//TODO()Applying Business logic)
+        /*data.setValue(temp.getValue());
 
         ApiClient.getInstance()
                 .getApiService()
-                .getProjectList(userId).enqueue(new Callback<List<Project>>() {
+                .getProjectList(repoName).enqueue(new Callback<List<Project>>() {
 
             @Override
-            public void onResponse(Call<List<Project>> call, Response<List<Project>> response) {
+            public void onResponse(Call<List<Project>> call, final Response<List<Project>> response) {
                 data.setValue(response.body());
+                Completable.fromRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        appDatabase.projectDao().insertAll(response.body());
+                    }
+                }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe();
             }
 
             @Override
@@ -53,10 +50,8 @@ public class CustomRepository {
 
             }
 
-        });
-
-        return data;
-
+        });*/
+        return temp;
     }
 /*
     public List<Project> requestProjectList(String userId, final AppDatabase appDatabase) {

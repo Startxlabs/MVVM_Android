@@ -1,8 +1,8 @@
 package com.startxlabs.mvvm.Repository.Converters;
 
-import android.arch.persistence.room.TypeConverter;
-
 import java.util.Date;
+
+import androidx.room.TypeConverter;
 
 public class DateConverter {
 

@@ -1,27 +1,30 @@
 package com.startxlabs.mvvm.ViewModel;
 
-import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
-import android.support.annotation.NonNull;
-
 import com.startxlabs.mvvm.Model.Project;
+import com.startxlabs.mvvm.Repository.ApiClient;
 import com.startxlabs.mvvm.Repository.AppDatabase;
-import com.startxlabs.mvvm.Repository.AppDatabaseClient;
 import com.startxlabs.mvvm.Repository.CustomRepository;
 
 import java.util.List;
 
-public class CustomListViewModel extends AndroidViewModel {
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModel;
+
+public class CustomListViewModel extends ViewModel {
 
     private LiveData<List<Project>> mProjectListLiveData;
+    private AppDatabase mAppDatabase;
+    private ApiClient mApiClient;
+    private String mRepoName;
 
-    public CustomListViewModel(@NonNull Application application) {
-        super(application);
-        final AppDatabase appDatabase = AppDatabaseClient.getInstance().getAppDatabase(getApplication());
-//        mProjectListLiveData = CustomRepository.getInstance().getProjectList("Google",appDatabase);
-        mProjectListLiveData = CustomRepository.getInstance().getProjectList("Google");
+    public CustomListViewModel(ApiClient apiClient, AppDatabase appDatabase, String repoName) {
+        mApiClient = apiClient;
+        mAppDatabase = appDatabase;
+        mRepoName = repoName;
+
+        mProjectListLiveData = CustomRepository.getInstance().getProjectList(mApiClient, mAppDatabase, mRepoName);
     }
+
 
     public LiveData<List<Project>> getProjectListObservable() {
 
