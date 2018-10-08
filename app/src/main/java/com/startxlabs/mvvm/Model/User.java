@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.startxlabs.mvvm.Repository.Converters.DateConverter;
+import com.startxlabs.mvvm.Repository.Room.Converters.DateConverter;
 
 import java.util.Date;
 

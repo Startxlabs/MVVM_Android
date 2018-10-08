@@ -1,4 +1,4 @@
-package com.startxlabs.mvvm.Repository.Dao;
+package com.startxlabs.mvvm.Repository.Room.Dao;
 
 import com.startxlabs.mvvm.Model.Project;
 

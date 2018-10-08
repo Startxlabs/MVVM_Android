@@ -1,4 +1,4 @@
-package com.startxlabs.mvvm.Repository;
+package com.startxlabs.mvvm.Repository.Room;
 
 import android.content.Context;
 

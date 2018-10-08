@@ -5,15 +5,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-import com.startxlabs.mvvm.Model.Project;
+import com.startxlabs.mvvm.Model.ProjectRes;
 import com.startxlabs.mvvm.R;
-import com.startxlabs.mvvm.Repository.ApiClient;
-import com.startxlabs.mvvm.Repository.AppDatabaseClient;
+import com.startxlabs.mvvm.Repository.Retrofit.ApiClient;
+import com.startxlabs.mvvm.Repository.Room.AppDatabaseClient;
 import com.startxlabs.mvvm.ViewModel.CustomListViewModel;
 import com.startxlabs.mvvm.ViewModel.CustomListViewModelFactory;
-
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -81,7 +80,7 @@ public class ListFragment extends Fragment {
 
         // Update the list when the data changes
 
-        viewModel.getProjectListObservable().observe(this, new Observer<List<Project>>() {
+        /*viewModel.getProjectListObservable().observe(this, new Observer<List<Project>>() {
 
             @Override
 
@@ -94,7 +93,30 @@ public class ListFragment extends Fragment {
 
             }
 
+        });*/
+
+        viewModel.getProjectList2Observable().observe(this, new Observer<ProjectRes>() {
+
+            @Override
+
+            public void onChanged(@Nullable ProjectRes projectRes) {
+                if (projectRes.isFine()) {
+                    mCustomAdapter.setProjectList(projectRes.getProjectList());
+                    mCustomAdapter.notifyDataSetChanged();
+                } else {
+                    //TODO(Handling Different Errors centrally)
+                    if (projectRes.getBaseException() != null)
+                        Toast.makeText(getActivity(), "Handle Exception", Toast.LENGTH_SHORT).show();
+                    else if (projectRes.getBaseError() != null)
+                        Toast.makeText(getActivity(), "Handle Error", Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(getActivity(), "Handle Unknown Issue", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
         });
+
 
     }
 }

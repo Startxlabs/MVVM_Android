@@ -1,4 +1,4 @@
-package com.startxlabs.mvvm.Base;
+package com.startxlabs.mvvm.Model.Base;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -8,6 +8,17 @@ import com.google.gson.annotations.SerializedName;
 
 public class BaseStatus implements Parcelable {
 
+    public static final Creator<BaseStatus> CREATOR = new Creator<BaseStatus>() {
+        @Override
+        public BaseStatus createFromParcel(Parcel in) {
+            return new BaseStatus(in);
+        }
+
+        @Override
+        public BaseStatus[] newArray(int size) {
+            return new BaseStatus[size];
+        }
+    };
     @SerializedName("error")
     @Expose
     private String error;
@@ -35,18 +46,6 @@ public class BaseStatus implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<BaseStatus> CREATOR = new Creator<BaseStatus>() {
-        @Override
-        public BaseStatus createFromParcel(Parcel in) {
-            return new BaseStatus(in);
-        }
-
-        @Override
-        public BaseStatus[] newArray(int size) {
-            return new BaseStatus[size];
-        }
-    };
 
     public String getError() {
         return error;

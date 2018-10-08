@@ -1,4 +1,4 @@
-package com.startxlabs.mvvm.Repository;
+package com.startxlabs.mvvm.Repository.Retrofit;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;

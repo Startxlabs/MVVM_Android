@@ -1,6 +1,12 @@
 package com.startxlabs.mvvm.Repository;
 
+import com.startxlabs.mvvm.Model.Base.BaseError;
+import com.startxlabs.mvvm.Model.Base.BaseException;
 import com.startxlabs.mvvm.Model.Project;
+import com.startxlabs.mvvm.Model.ProjectRes;
+import com.startxlabs.mvvm.Repository.Retrofit.ApiClient;
+import com.startxlabs.mvvm.Repository.Retrofit.CustomResponseHandlerCallback;
+import com.startxlabs.mvvm.Repository.Room.AppDatabase;
 
 import java.util.List;
 
@@ -30,11 +36,11 @@ public class CustomRepository {
     }
 
 
-    public LiveData<List<Project>> getProjectList(ApiClient apiClient, final AppDatabase appDatabase, String repoName) {
+    public LiveData<List<Project>> getProjectListSSOT(ApiClient apiClient, final AppDatabase appDatabase, String repoName) {
 
         LiveData<List<Project>> temp = appDatabase.projectDao().getAll();
 
-        ApiClient.getInstance()
+        apiClient
                 .getApiService()
                 .getProjectList(repoName).enqueue(new Callback<List<Project>>() {
 
@@ -58,10 +64,49 @@ public class CustomRepository {
         return temp;
     }
 
-    public LiveData<List<Project>> getProjectList(ApiClient apiClient, String repoName) {
+
+    public MutableLiveData<ProjectRes> getProjectListServerWithErrorHandling(ApiClient apiClient, final AppDatabase appDatabase, String repoName) {
+
+        final MutableLiveData<ProjectRes> mutableLiveData = new MutableLiveData<>();
+        final ProjectRes projectRes = new ProjectRes();
+
+        apiClient.getApiService().getProjectList2(repoName)
+                .enqueue(new CustomResponseHandlerCallback<List<Project>>() {
+                    @Override
+                    protected void handleResponse(List<Project> data) {
+                        projectRes.setProjectList(data);
+                        projectRes.setFine(true);
+                        mutableLiveData.setValue(projectRes);
+                    }
+
+                    @Override
+                    protected void handleError(BaseError baseError) {
+                        projectRes.setBaseError(baseError);
+                        projectRes.setFine(false);
+                        mutableLiveData.setValue(projectRes);
+                    }
+
+                    @Override
+                    protected void handleException(BaseException baseException) {
+                        projectRes.setBaseException(baseException);
+                        projectRes.setFine(false);
+                        mutableLiveData.setValue(projectRes);
+                    }
+
+                    @Override
+                    protected void handleUnknownFailure() {
+                        projectRes.setFine(false);
+                        mutableLiveData.setValue(projectRes);
+                    }
+                });
+
+        return mutableLiveData;
+    }
+
+    public LiveData<List<Project>> getProjectListServer(ApiClient apiClient, String repoName) {
 
 
-        ApiClient.getInstance()
+        apiClient
                 .getApiService()
                 .getProjectList(repoName).enqueue(new Callback<List<Project>>() {
 

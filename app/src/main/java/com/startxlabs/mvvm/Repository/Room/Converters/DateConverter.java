@@ -1,4 +1,4 @@
-package com.startxlabs.mvvm.Repository.Converters;
+package com.startxlabs.mvvm.Repository.Room.Converters;
 
 import java.util.Date;
 

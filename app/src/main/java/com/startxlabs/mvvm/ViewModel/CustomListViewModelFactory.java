@@ -1,7 +1,7 @@
 package com.startxlabs.mvvm.ViewModel;
 
-import com.startxlabs.mvvm.Repository.ApiClient;
-import com.startxlabs.mvvm.Repository.AppDatabase;
+import com.startxlabs.mvvm.Repository.Retrofit.ApiClient;
+import com.startxlabs.mvvm.Repository.Room.AppDatabase;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;

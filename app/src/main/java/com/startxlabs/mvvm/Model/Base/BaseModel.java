@@ -1,34 +1,12 @@
-package com.startxlabs.mvvm.Base;
+package com.startxlabs.mvvm.Model.Base;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class BaseModel implements Parcelable {
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-    private BaseStatus status;
-
-    private BaseError baseError;
-
-    private BaseException baseException;
-
-
-    protected BaseModel(Parcel in) {
-        status = in.readParcelable(BaseStatus.class.getClassLoader());
-        baseError = in.readParcelable(BaseError.class.getClassLoader());
-        baseException = in.readParcelable(BaseException.class.getClassLoader());
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeParcelable(status, flags);
-        dest.writeParcelable(baseError, flags);
-        dest.writeParcelable(baseException, flags);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+public class BaseModel<T> implements Parcelable {
 
     public static final Creator<BaseModel> CREATOR = new Creator<BaseModel>() {
         @Override
@@ -41,6 +19,44 @@ public class BaseModel implements Parcelable {
             return new BaseModel[size];
         }
     };
+    private BaseStatus status;
+    private BaseError baseError;
+    private BaseException baseException;
+    private boolean isFine;
+    @SerializedName("data")
+    @Expose
+    private T data;
+
+    protected BaseModel(Parcel in) {
+        status = in.readParcelable(BaseStatus.class.getClassLoader());
+        baseError = in.readParcelable(BaseError.class.getClassLoader());
+        baseException = in.readParcelable(BaseException.class.getClassLoader());
+        isFine = in.readByte() != 0;
+    }
+
+    public BaseModel() {
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(status, flags);
+        dest.writeParcelable(baseError, flags);
+        dest.writeParcelable(baseException, flags);
+        dest.writeByte((byte) (isFine ? 1 : 0));
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public boolean isFine() {
+        return isFine;
+    }
+
+    public void setFine(boolean fine) {
+        isFine = fine;
+    }
 
     public BaseStatus getStatus() {
         return status;
@@ -64,5 +80,13 @@ public class BaseModel implements Parcelable {
 
     public void setBaseException(BaseException baseException) {
         this.baseException = baseException;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
     }
 }

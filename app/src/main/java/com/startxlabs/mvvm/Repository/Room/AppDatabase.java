@@ -1,7 +1,7 @@
-package com.startxlabs.mvvm.Repository;
+package com.startxlabs.mvvm.Repository.Room;
 
 import com.startxlabs.mvvm.Model.Project;
-import com.startxlabs.mvvm.Repository.Dao.ProjectDao;
+import com.startxlabs.mvvm.Repository.Room.Dao.ProjectDao;
 
 import androidx.room.Database;
 import androidx.room.RoomDatabase;
