@@ -5,12 +5,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.startxlabs.mvvm.Model.ProjectRes;
 import com.startxlabs.mvvm.R;
 import com.startxlabs.mvvm.Repository.Retrofit.ApiClient;
 import com.startxlabs.mvvm.Repository.Room.AppDatabaseClient;
+import com.startxlabs.mvvm.Utility.Utility;
 import com.startxlabs.mvvm.ViewModel.CustomListViewModel;
 import com.startxlabs.mvvm.ViewModel.CustomListViewModelFactory;
 
@@ -21,6 +21,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
 /**
@@ -32,6 +33,10 @@ public class ListFragment extends Fragment {
 
     private RecyclerView rvList;
     private CustomAdapter mCustomAdapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
+
+    private CustomListViewModelFactory customListViewModelFactory;
+    private CustomListViewModel customListViewModel;
 
     public ListFragment() {
         // Required empty public constructor
@@ -56,23 +61,42 @@ public class ListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         rvList = view.findViewById(R.id.rvList);
+        swipeRefreshLayout = view.findViewById(R.id.srl);
         rvList.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvList.setAdapter(mCustomAdapter);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                setViewModel(true);
+            }
+        });
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        CustomListViewModelFactory customListViewModelFactory =
-                new CustomListViewModelFactory(AppDatabaseClient.getInstance().getAppDatabase(getActivity())
-                        , ApiClient.getInstance()
-                        , "Google");
-        CustomListViewModel customListViewModel = ViewModelProviders
+        setViewModel(false);
+
+    }
+
+    private void setViewModel(boolean refresh) {
+        customListViewModelFactory = new CustomListViewModelFactory(AppDatabaseClient.getInstance().getAppDatabase(getActivity())
+                , ApiClient.getInstance()
+                , "Google");
+
+        customListViewModel = ViewModelProviders
                 .of(this, customListViewModelFactory)
                 .get(CustomListViewModel.class);
 
-//        CustomListViewModel customListViewModel = ViewModelProviders.of(this).get(CustomListViewModel.class);
+        if (refresh)
+            customListViewModel.clearObservableLiveData();
+        else {
+            if (customListViewModel.getProjectList2Observable().getValue() != null && !customListViewModel.getProjectList2Observable().getValue().isFine())
+                customListViewModel.clearObservableLiveData();
+        }
+
         observeViewModel(customListViewModel);
     }
 
@@ -100,23 +124,36 @@ public class ListFragment extends Fragment {
             @Override
 
             public void onChanged(@Nullable ProjectRes projectRes) {
-                if (projectRes.isFine()) {
-                    mCustomAdapter.setProjectList(projectRes.getProjectList());
-                    mCustomAdapter.notifyDataSetChanged();
-                } else {
-                    //TODO(Handling Different Errors centrally)
-                    if (projectRes.getBaseException() != null)
-                        Toast.makeText(getActivity(), "Handle Exception", Toast.LENGTH_SHORT).show();
-                    else if (projectRes.getBaseError() != null)
-                        Toast.makeText(getActivity(), "Handle Error", Toast.LENGTH_SHORT).show();
-                    else
-                        Toast.makeText(getActivity(), "Handle Unknown Issue", Toast.LENGTH_SHORT).show();
-                }
+                swipeRefreshLayout.setRefreshing(false);
+                if (projectRes != null)
+                    if (projectRes.isFine()) {
+                        mCustomAdapter.setProjectList(projectRes.getProjectList());
+                        mCustomAdapter.notifyDataSetChanged();
+                    } else {
+                        //TODO(Handling Different Errors centrally)
+                        if (projectRes.getBaseException() != null) {
+                            showErrorSnackbar("Exception Occurred");
+                        } else if (projectRes.getBaseError() != null)
+                            showErrorSnackbar("Error Occurred");
+                        else
+                            showErrorSnackbar("Unknown Error Occurred");
+                    }
 
             }
 
         });
 
 
+    }
+
+
+    private void showErrorSnackbar(String string) {
+        Utility.makeSnackbar(getView(), string)
+                .setAction(string, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        setViewModel(false);
+                    }
+                }).show();
     }
 }

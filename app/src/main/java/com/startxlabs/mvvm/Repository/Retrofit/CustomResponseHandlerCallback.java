@@ -48,21 +48,5 @@ public abstract class CustomResponseHandlerCallback<T> implements Callback<T> {
             handleUnknownFailure();
 
     }
-   /* @Override
-    public void onResponse(Call<Response<T>> call, Response<Response<T>> response) {
-        if (response.body() != null)
-            handleResponse(response.body().body());
-        else
-            handleError(response);
 
-    }
-
-    @Override
-    public void onFailure(Call<Response<T>> call, Throwable t) {
-        if (t instanceof Exception)
-            handleException((Exception) t);
-        else
-            handleUnknownFailure();
-
-    }*/
 }

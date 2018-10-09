@@ -39,6 +39,10 @@ public class CustomListViewModel extends ViewModel {
     public MutableLiveData<ProjectRes> getProjectList2Observable() {
         return mProjectResMutableLiveData;
     }
+    public void clearObservableLiveData(){
+//        mProjectResMutableLiveData = new MutableLiveData<>();
+        mProjectResMutableLiveData = CustomRepository.getInstance().getProjectListServerWithErrorHandling(mApiClient, mAppDatabase, mRepoName);
+    }
 
 
 }
